@@ -1,0 +1,12 @@
+{
+    "name": "supriadi/belajar_php_mvc",
+    "description": "Belajar PHP MVC",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Supriadi Roadman",
+            "email": "supriadiroadman@gmail.com"
+        }
+    ],
+    "require": {}
+}
