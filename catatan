@@ -1,3 +1,6 @@
+Local Domain
+================================
+
 Tambahkan
 127.0.0.1	php-mvc.supriadi
 Ke
@@ -8,3 +11,27 @@ Lalu Jalankan
 php -S 127.0.0.1:8080
 Akses dengan browser di
 http://php-mvc.supriadi:8080/
+
+Apache HTTPD
+================================
+
+Buka httpd.conf di
+C:\xampp\apache\conf\httpd.conf
+
+Uncomment jika di comment baris ini
+Include conf/extra/httpd-vhosts.conf
+
+Buka httpd-vhosts.conf di
+C:\xampp\apache\conf\extra\httpd-vhosts.conf
+
+Tambah baris berikut
+<VirtualHost *:80>
+    ServerAdmin admin@php-mvc.supriadi
+    DocumentRoot "C:/xampp/htdocs/belajar_php_mvc/public"
+    ServerName php-mvc.supriadi
+    ErrorLog "logs/php-mvc.supriadi-error.log"
+    CustomLog "logs/php-mvc.supriadi-access.log" common
+</VirtualHost>
+
+Akses dengan browser di
+http://php-mvc.supriadi/
