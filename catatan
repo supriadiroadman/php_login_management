@@ -1,0 +1,10 @@
+Tambahkan
+127.0.0.1	php-mvc.supriadi
+Ke
+C:\Windows\System32\drivers\etc\hosts
+Jalankan dengan run administrator
+
+Lalu Jalankan
+php -S 127.0.0.1:8080
+Akses dengan browser di
+http://php-mvc.supriadi:8080/
