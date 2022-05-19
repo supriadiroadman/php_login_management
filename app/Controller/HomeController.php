@@ -2,6 +2,8 @@
 
 namespace Supriadi\BelajarPhpMvc\Controller;
 
+use Supriadi\BelajarPhpMvc\App\View;
+
 class HomeController
 {
     function index(): void
@@ -12,7 +14,8 @@ class HomeController
         ];
 
         //echo "HomeController.index()";
-        require __DIR__.'/../View/Home/index.php';
+        //require __DIR__.'/../View/Home/index.php';
+        View::render('Home/index', $model);
     }
 
     function hello(): void
