@@ -6,6 +6,11 @@ class HomeController
 {
     function index(): void
     {
+        $model = [
+            'title' => 'Belajar PHP MVC',
+            'content' => 'Selamat belajar PHP MVC'
+        ];
+
         echo "HomeController.index()";
     }
 
