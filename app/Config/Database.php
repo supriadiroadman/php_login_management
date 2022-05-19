@@ -22,4 +22,3 @@ class Database
         return self::$pdo;
     }
 }
-var_dump(Database::getConnection());

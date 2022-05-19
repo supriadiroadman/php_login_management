@@ -1,1 +1,1 @@
-{"version":1,"defects":{"Supriadi\\BelajarPhpMvc\\RegexTest::testRegex":3},"times":{"Supriadi\\BelajarPhpMvc\\RegexTest::testRegex":0.063}}
+{"version":1,"defects":{"Supriadi\\BelajarPhpMvc\\RegexTest::testRegex":3,"Supriadi\\BelajarPhpMvc\\Config\\DatabaseTest::testGetConnection":4},"times":{"Supriadi\\BelajarPhpMvc\\RegexTest::testRegex":0.063,"Supriadi\\BelajarPhpMvc\\Config\\DatabaseTest::testGetConnection":0.032,"Supriadi\\BelajarPhpMvc\\Config\\DatabaseTest::testGetConnectionSingleton":0.033}}
