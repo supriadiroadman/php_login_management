@@ -8,21 +8,35 @@ namespace Supriadi\BelajarPhpMvc\App {
     }
 }
 
+namespace Supriadi\BelajarPhpMvc\Service {
+
+    function setcookie(string $name, string $value)
+    {
+        echo "$name: $value";
+    }
+}
+
 namespace Supriadi\BelajarPhpMvc\Controller {
 
     use PHPUnit\Framework\TestCase;
     use Supriadi\BelajarPhpMvc\Config\Database;
     use Supriadi\BelajarPhpMvc\Domain\User;
+    use Supriadi\BelajarPhpMvc\Repository\SessionRepository;
     use Supriadi\BelajarPhpMvc\Repository\UserRepository;
 
     class UserControllerTest extends TestCase
     {
         private UserController $userController;
         private UserRepository $userRepository;
+        private SessionRepository $sessionRepository;
 
         protected function setUp(): void
         {
             $this->userController = new UserController();
+
+            $this->sessionRepository = new SessionRepository(Database::getConnection());
+            $this->sessionRepository->deleteAll();
+
             $this->userRepository = new UserRepository(Database::getConnection());
             $this->userRepository->deleteAll();
 
@@ -113,6 +127,7 @@ namespace Supriadi\BelajarPhpMvc\Controller {
             $this->userController->postLogin();
 
             $this->expectOutputRegex("[Location: /]");
+            $this->expectOutputRegex("[X-SUPRIADI-SESSION: ]");
         }
 
         public function testLoginValidationError()
