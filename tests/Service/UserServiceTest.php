@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Supriadi\BelajarPhpMvc\Config\Database;
 use Supriadi\BelajarPhpMvc\Domain\User;
 use Supriadi\BelajarPhpMvc\Exception\ValidationException;
+use Supriadi\BelajarPhpMvc\Model\UserLoginRequest;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterRequest;
 use Supriadi\BelajarPhpMvc\Repository\UserRepository;
 
@@ -68,5 +69,47 @@ class UserServiceTest extends TestCase
         $response = $this->userService->register($request);
     }
 
+    public function testLoginNotFound()
+    {
+        $this->expectException(ValidationException::class);
+        $request = new UserLoginRequest();
+        $request->setId('adi');
+        $request->setPassword('rahasia');
 
+        $this->userService->login($request);
+    }
+
+    public function testLoginWrongPassword()
+    {
+        $user = new User();
+        $user->setId('adi');
+        $user->setName('Adi');
+        $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+
+        $this->expectException(ValidationException::class);
+
+        $request = new UserLoginRequest();
+        $request->setId('adi');
+        $request->setPassword('rahasia');
+
+        $this->userService->login($request);
+    }
+
+    public function testLoginSuccess()
+    {
+        $user = new User();
+        $user->setId('adi');
+        $user->setName('Adi');
+        $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+
+        $this->expectException(ValidationException::class);
+
+        $request = new UserLoginRequest();
+        $request->setId('adi');
+        $request->setPassword('rahasia');
+
+        $response = $this->userService->login($request);
+
+        self::assertEquals($request->getId(), $response->getUser()->getId());
+    }
 }
