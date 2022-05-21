@@ -18,4 +18,7 @@ ADD CONSTRAINT fk_sessions_user
 FOREIGN KEY (user_id)
 REFERENCES users(id);
 
+DELETE FROM sessions;
+DELETE FROM users;
 SELECT * FROM sessions;
+SELECT * FROM users;

@@ -7,18 +7,24 @@ use Supriadi\BelajarPhpMvc\Config\Database;
 use Supriadi\BelajarPhpMvc\Exception\ValidationException;
 use Supriadi\BelajarPhpMvc\Model\UserLoginRequest;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterRequest;
+use Supriadi\BelajarPhpMvc\Repository\SessionRepository;
 use Supriadi\BelajarPhpMvc\Repository\UserRepository;
+use Supriadi\BelajarPhpMvc\Service\SessionService;
 use Supriadi\BelajarPhpMvc\Service\UserService;
 
 class UserController
 {
     private UserService $userService;
+    private SessionService $sessionService;
 
     public function __construct()
     {
         $connection = Database::getConnection();
         $userRepository = new UserRepository($connection);
         $this->userService = new UserService($userRepository);
+
+        $sessionRepository = new SessionRepository($connection);
+        $this->sessionService = new SessionService($sessionRepository, $userRepository);
     }
 
 
@@ -61,7 +67,8 @@ class UserController
         $request->setPassword($_POST['password']);
 
         try {
-            $this->userService->login($request);
+            $response = $this->userService->login($request);
+            $this->sessionService->create($response->getUser()->getId());
             View::redirect('/');
         } catch (ValidationException $exception) {
             View::render('User/login', [
