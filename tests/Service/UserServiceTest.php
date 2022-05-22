@@ -7,6 +7,7 @@ use Supriadi\BelajarPhpMvc\Config\Database;
 use Supriadi\BelajarPhpMvc\Domain\User;
 use Supriadi\BelajarPhpMvc\Exception\ValidationException;
 use Supriadi\BelajarPhpMvc\Model\UserLoginRequest;
+use Supriadi\BelajarPhpMvc\Model\UserProfileUpdateRequest;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterRequest;
 use Supriadi\BelajarPhpMvc\Repository\UserRepository;
 
@@ -112,4 +113,46 @@ class UserServiceTest extends TestCase
 
         self::assertEquals($request->getId(), $response->getUser()->getId());
     }
+
+    public function testUpdateSuccess()
+    {
+        $user = new User();
+        $user->setId('adi');
+        $user->setName('Adi');
+        $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+        $this->userRepository->save($user);
+
+        $request = new UserProfileUpdateRequest();
+        $request->setId('adi');
+        $request->setName('Ganti nama');
+        $this->userService->updateProfile($request);
+
+        $result = $this->userRepository->findById($user->getId());
+
+        self::assertEquals($request->getName(), $result->getName());
+
+
+    }
+
+    public function testUpdateValidationError()
+    {
+        $this->expectException(ValidationException::class);
+
+        $request = new UserProfileUpdateRequest();
+        $request->setId('');
+        $request->setName('');
+        $this->userService->updateProfile($request);
+    }
+
+    public function testUpdateNotFound()
+    {
+        $this->expectException(ValidationException::class);
+
+        $request = new UserProfileUpdateRequest();
+        $request->setId('adi');
+        $request->setName('Adi');
+        $this->userService->updateProfile($request);
+    }
+
+
 }
