@@ -20,9 +20,11 @@ namespace Supriadi\BelajarPhpMvc\Controller {
 
     use PHPUnit\Framework\TestCase;
     use Supriadi\BelajarPhpMvc\Config\Database;
+    use Supriadi\BelajarPhpMvc\Domain\Session;
     use Supriadi\BelajarPhpMvc\Domain\User;
     use Supriadi\BelajarPhpMvc\Repository\SessionRepository;
     use Supriadi\BelajarPhpMvc\Repository\UserRepository;
+    use Supriadi\BelajarPhpMvc\Service\SessionService;
 
     class UserControllerTest extends TestCase
     {
@@ -171,6 +173,31 @@ namespace Supriadi\BelajarPhpMvc\Controller {
             $this->expectOutputRegex("[Password]");
             $this->expectOutputRegex("[id or password is wrong]");
         }
+
+        public function testLogout()
+        {
+            $user = new User();
+            $user->setId('adi');
+            $user->setName('Adi');
+            $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+            $this->userRepository->save($user);
+
+            $session = new Session();
+            $session->setId(uniqid());
+            $session->setUserId($user->getId());
+            $this->sessionRepository->save($session);
+
+            $_COOKIE[SessionService::$COOKIE_NAME] = $session->getId();
+
+            $this->userController->logout();
+
+            $this->expectOutputRegex("[Location: /]");
+            $this->expectOutputRegex("[X-SUPRIADI-SESSION: ]");
+
+
+        }
+
+
     }
 }
 
