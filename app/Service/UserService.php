@@ -7,6 +7,8 @@ use Supriadi\BelajarPhpMvc\Domain\User;
 use Supriadi\BelajarPhpMvc\Exception\ValidationException;
 use Supriadi\BelajarPhpMvc\Model\UserLoginRequest;
 use Supriadi\BelajarPhpMvc\Model\UserLoginResponse;
+use Supriadi\BelajarPhpMvc\Model\UserProfileUpdateRequest;
+use Supriadi\BelajarPhpMvc\Model\UserProfileUpdateResponse;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterRequest;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterResponse;
 use Supriadi\BelajarPhpMvc\Repository\UserRepository;
@@ -82,6 +84,42 @@ class UserService
         if ($request->getId() == null || $request->getPassword() == null
             || trim($request->getId()) == "" || trim($request->getPassword()) == "") {
             throw new ValidationException("Id,Password can not blank");
+        }
+    }
+
+    public function updateProfile(UserProfileUpdateRequest $request): UserProfileUpdateResponse
+    {
+        $this->validateUserProfileUpdateRequest($request);
+
+        try {
+            Database::beginTransaction();
+            $user = $this->userRepository->findById($request->getId());
+
+            if ($user == null) {
+                throw new ValidationException('User is not found');
+            }
+
+            $user->setName($request->getName());
+            $this->userRepository->update($user);
+
+            Database::commitTransaction();
+
+            $response = new UserProfileUpdateResponse();
+            $response->setUser($user);
+            return $response;
+
+        } catch (\Exception $exception) {
+            Database::rollbackTransaction();
+            throw $exception;
+        }
+
+    }
+
+    private function validateUserProfileUpdateRequest(UserProfileUpdateRequest $request)
+    {
+        if ($request->getId() == null || $request->getName() == null
+            || trim($request->getId()) == "" || trim($request->getName()) == "") {
+            throw new ValidationException("Id,Name can not blank");
         }
     }
 }
