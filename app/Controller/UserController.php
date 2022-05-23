@@ -6,6 +6,7 @@ use Supriadi\BelajarPhpMvc\App\View;
 use Supriadi\BelajarPhpMvc\Config\Database;
 use Supriadi\BelajarPhpMvc\Exception\ValidationException;
 use Supriadi\BelajarPhpMvc\Model\UserLoginRequest;
+use Supriadi\BelajarPhpMvc\Model\UserProfileUpdateRequest;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterRequest;
 use Supriadi\BelajarPhpMvc\Repository\SessionRepository;
 use Supriadi\BelajarPhpMvc\Repository\UserRepository;
@@ -82,5 +83,41 @@ class UserController
     {
         $this->sessionService->destroy();
         View::redirect('/');
+    }
+
+    public function updateProfile()
+    {
+        $user = $this->sessionService->current();
+
+        View::render('User/profile', [
+            'title' => 'Update user profile',
+            'user' => [
+                'id' => $user->getId(),
+                'name' => $user->getName()
+            ]
+        ]);
+    }
+
+    public function postUpdateProfile()
+    {
+        $user = $this->sessionService->current();
+
+        $request = new UserProfileUpdateRequest();
+        $request->setId($user->getId());
+        $request->setName($_POST['name']);
+
+        try {
+            $this->userService->updateProfile($request);
+            View::redirect('/');
+        }catch (ValidationException $exception){
+            View::render('User/profile', [
+                'title' => 'Update user profile',
+                'error' => $exception->getMessage(),
+                'user' => [
+                    'id' => $user->getId(),
+                    'name' => $_POST['name']
+                ]
+            ]);
+        }
     }
 }
