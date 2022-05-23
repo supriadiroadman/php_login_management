@@ -197,6 +197,77 @@ namespace Supriadi\BelajarPhpMvc\Controller {
 
         }
 
+        public function testUpdateProfile()
+        {
+            $user = new User();
+            $user->setId('adi');
+            $user->setName('Adi');
+            $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+            $this->userRepository->save($user);
+
+            $session = new Session();
+            $session->setId(uniqid());
+            $session->setUserId($user->getId());
+            $this->sessionRepository->save($session);
+
+            $_COOKIE[SessionService::$COOKIE_NAME] = $session->getId();
+            $this->userController->updateProfile();
+
+            $this->expectOutputRegex("[Profile]");
+            $this->expectOutputRegex("[Id]");
+            $this->expectOutputRegex("[adi]");
+            $this->expectOutputRegex("[Name]");
+            $this->expectOutputRegex("[Adi]");
+        }
+
+        public function testPostUpdateProfileSuccess()
+        {
+            $user = new User();
+            $user->setId('adi');
+            $user->setName('Adi');
+            $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+            $this->userRepository->save($user);
+
+            $session = new Session();
+            $session->setId(uniqid());
+            $session->setUserId($user->getId());
+            $this->sessionRepository->save($session);
+
+            $_COOKIE[SessionService::$COOKIE_NAME] = $session->getId();
+
+            $_POST['name'] = 'Ganti nama';
+            $this->userController->postUpdateProfile();
+            $this->expectOutputRegex("[Location: /]");
+
+            $result = $this->userRepository->findById('adi');
+            self::assertEquals('Ganti nama', $result->getName());
+
+        }
+
+        public function testPostUpdateProfileValidationError()
+        {
+            $user = new User();
+            $user->setId('adi');
+            $user->setName('Adi');
+            $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+            $this->userRepository->save($user);
+
+            $session = new Session();
+            $session->setId(uniqid());
+            $session->setUserId($user->getId());
+            $this->sessionRepository->save($session);
+
+            $_COOKIE[SessionService::$COOKIE_NAME] = $session->getId();
+
+            $_POST['name'] = '';
+            $this->userController->postUpdateProfile();
+
+            $this->expectOutputRegex("[Profile]");
+            $this->expectOutputRegex("[Id]");
+            $this->expectOutputRegex("[adi]");
+            $this->expectOutputRegex("[Name]");
+            $this->expectOutputRegex("[Id,Name can not blank]");
+        }
 
     }
 }
