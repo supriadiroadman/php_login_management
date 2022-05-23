@@ -1,22 +1,7 @@
 <?php
 
-namespace Supriadi\BelajarPhpMvc\App {
-
-    function header(string $value)
-    {
-        echo $value;
-    }
-}
-
-namespace Supriadi\BelajarPhpMvc\Service {
-
-    function setcookie(string $name, string $value)
-    {
-        echo "$name: $value";
-    }
-}
-
 namespace Supriadi\BelajarPhpMvc\Controller {
+    require_once __DIR__.'/../Helper/helper.php';
 
     use PHPUnit\Framework\TestCase;
     use Supriadi\BelajarPhpMvc\Config\Database;

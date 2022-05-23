@@ -35,3 +35,11 @@ Tambah baris berikut
 
 Akses dengan browser di
 http://php-mvc.supriadi/
+
+
+
+Memeriksa Semua Unit Test
+================================
+Menjalankan semua unit test dari folder test
+Error, karena ada function yang di deklarasikan ulang
+Solusinya, buat helper yang bisa dipanggil di tempat yg membutuhkan

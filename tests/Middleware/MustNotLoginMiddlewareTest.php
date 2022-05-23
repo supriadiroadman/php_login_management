@@ -1,14 +1,7 @@
 <?php
 
-namespace Supriadi\BelajarPhpMvc\App {
-
-    function header(string $value)
-    {
-        echo $value;
-    }
-}
-
 namespace Supriadi\BelajarPhpMvc\Middleware {
+    require_once __DIR__.'/../Helper/helper.php';
 
     use PHPUnit\Framework\TestCase;
     use Supriadi\BelajarPhpMvc\Config\Database;

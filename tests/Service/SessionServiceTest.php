@@ -2,17 +2,14 @@
 
 namespace Supriadi\BelajarPhpMvc\Service;
 
+require_once __DIR__.'/../Helper/helper.php';
+
 use PHPUnit\Framework\TestCase;
 use Supriadi\BelajarPhpMvc\Config\Database;
 use Supriadi\BelajarPhpMvc\Domain\Session;
 use Supriadi\BelajarPhpMvc\Domain\User;
 use Supriadi\BelajarPhpMvc\Repository\SessionRepository;
 use Supriadi\BelajarPhpMvc\Repository\UserRepository;
-
-function setcookie(string $name, string $value)
-{
-    echo "$name: $value";
-}
 
 class SessionServiceTest extends TestCase
 {
