@@ -7,8 +7,10 @@ use Supriadi\BelajarPhpMvc\Config\Database;
 use Supriadi\BelajarPhpMvc\Domain\User;
 use Supriadi\BelajarPhpMvc\Exception\ValidationException;
 use Supriadi\BelajarPhpMvc\Model\UserLoginRequest;
+use Supriadi\BelajarPhpMvc\Model\UserPasswordUpdateRequest;
 use Supriadi\BelajarPhpMvc\Model\UserProfileUpdateRequest;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterRequest;
+use Supriadi\BelajarPhpMvc\Repository\SessionRepository;
 use Supriadi\BelajarPhpMvc\Repository\UserRepository;
 
 class UserServiceTest extends TestCase
@@ -154,5 +156,67 @@ class UserServiceTest extends TestCase
         $this->userService->updateProfile($request);
     }
 
+    public function testUpdatePasswordSuccess()
+    {
+        $user = new User();
+        $user->setId('adi');
+        $user->setName('Adi');
+        $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+        $this->userRepository->save($user);
+
+        $request = new UserPasswordUpdateRequest();
+        $request->setId('adi');
+        $request->setOldPassword('rahasia');
+        $request->setNewPassword('Ganti password');
+
+        $this->userService->updatePassword($request);
+
+        $result = $this->userRepository->findById($user->getId());
+
+        self::assertTrue(password_verify($request->getNewPassword(), $result->getPassword()));
+    }
+
+    public function testUpdatePasswordValidationError()
+    {
+        $this->expectException(ValidationException::class);
+
+        $request = new UserPasswordUpdateRequest();
+        $request->setId('adi');
+        $request->setOldPassword('');
+        $request->setNewPassword('');
+
+        $this->userService->updatePassword($request);
+    }
+
+    public function testUpdatePasswordWrongOldPassword()
+    {
+        $this->expectException(ValidationException::class);
+
+        $user = new User();
+        $user->setId('adi');
+        $user->setName('Adi');
+        $user->setPassword(password_hash('rahasia', PASSWORD_BCRYPT));
+        $this->userRepository->save($user);
+
+        $request = new UserPasswordUpdateRequest();
+        $request->setId('adi');
+        $request->setOldPassword('Salah password lama');
+        $request->setNewPassword('Ganti password');
+
+        $this->userService->updatePassword($request);
+    }
+
+    public function testUpdatePasswordNotFound()
+    {
+        $this->expectException(ValidationException::class);
+
+        // Tidak ada user adi yg akan diupdate, makanya error
+        $request = new UserPasswordUpdateRequest();
+        $request->setId('adi');
+        $request->setOldPassword('rahasia');
+        $request->setNewPassword('Ganti password');
+
+        $this->userService->updatePassword($request);
+    }
 
 }
