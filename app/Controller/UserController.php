@@ -6,6 +6,7 @@ use Supriadi\BelajarPhpMvc\App\View;
 use Supriadi\BelajarPhpMvc\Config\Database;
 use Supriadi\BelajarPhpMvc\Exception\ValidationException;
 use Supriadi\BelajarPhpMvc\Model\UserLoginRequest;
+use Supriadi\BelajarPhpMvc\Model\UserPasswordUpdateRequest;
 use Supriadi\BelajarPhpMvc\Model\UserProfileUpdateRequest;
 use Supriadi\BelajarPhpMvc\Model\UserRegisterRequest;
 use Supriadi\BelajarPhpMvc\Repository\SessionRepository;
@@ -109,7 +110,7 @@ class UserController
         try {
             $this->userService->updateProfile($request);
             View::redirect('/');
-        }catch (ValidationException $exception){
+        } catch (ValidationException $exception) {
             View::render('User/profile', [
                 'title' => 'Update user profile',
                 'error' => $exception->getMessage(),
@@ -120,4 +121,39 @@ class UserController
             ]);
         }
     }
+
+    public function updatePassword()
+    {
+        $user = $this->sessionService->current();
+
+        View::render('User/password', [
+            'title' => 'Update user password',
+            'user' => [
+                'id' => $user->getId(),
+            ]
+        ]);
+    }
+
+    public function postUpdatePassword()
+    {
+        $user = $this->sessionService->current();
+        $request = new UserPasswordUpdateRequest();
+        $request->setId($user->getId());
+        $request->setOldPassword($_POST['oldPassword']);
+        $request->setNewPassword($_POST['newPassword']);
+
+        try {
+            $this->userService->updatePassword($request);
+            View::redirect('/');
+        } catch (ValidationException $exception) {
+            View::render('User/password', [
+                'title' => 'Update user password',
+                'error' => $exception->getMessage(),
+                'user' => [
+                    'id' => $user->getId(),
+                ]
+            ]);
+        }
+    }
+
 }
